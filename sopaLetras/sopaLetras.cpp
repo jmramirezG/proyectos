@@ -3,6 +3,7 @@
 
 using namespace std;
 
+//----------------------------------------------------------------------------------Inicio de las funciones----------------------------------------------------------------
 
 bool comprobarHorizontal(char sopa [100] [100], string palabra, int &fila, int &columna) {
     bool buscando = true, coincide = true;
@@ -72,6 +73,8 @@ void mostrar(char matriz[100][100], int filas, int columnas) {
         cout << endl;
     }
 }
+
+//---------------------------------------------------------------Comienzo del main------------------------------------------------------------------------
 
 int main() {
     char sopaLetras[100][100];
