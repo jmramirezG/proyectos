@@ -3,120 +3,226 @@
 
 using namespace std;
 
-//----------------------------------------------------------------------------------Inicio de las funciones----------------------------------------------------------------
+//---------------------------------------------------------------------------CLASE PALABRA-----------------------------------------------------------------------------------
+class Palabra {
+    private:
+        string palabra;     //Palabra que vamos a buscar
+        int fila;           //Fila y columna en la que la encontramos
+        int columna;
+        string posicion;        //Posición en la que la encontramos (horizontal, vertical...)
+        int longitud;           //Logitud de la palabra, para evitar abusar de .length()
 
-bool comprobarHorizontal(char sopa [100] [100], string palabra, int &fila, int &columna) {
-    bool buscando = true, coincide = true;
-    for (int i = 0; i < fila && buscando; i++) {                              //Comprobación horizontal
-        for (int j = 0; j < columna - palabra.length() && buscando; j++) {       //Solo buscamos hasta cierta columna, pues a partir de ahí la palabra no cabría en la sopa
-            coincide = true;
-            if (palabra[0] == sopa[i][j]) {
-                for (int k = 0; k < palabra.length() && coincide; k++) {
-                    if (palabra[k] != sopa[i][j+k]) coincide = false;
+    public:
+        Palabra() {
+            fila = 0;
+            columna = 0;
+            longitud = 0;
+            palabra = "0";
+            posicion = "0";
+        }
+
+        Palabra(string entrada) {       //Creamos la clase a partir de una palabra de entrada
+            this->longitud = entrada.length();
+            for (int i = 0; i < entrada.length(); i++) if (entrada[i]> 'Z') entrada[i] -= 32;
+            this->palabra = entrada;
+            fila = 0;
+            columna = 0;
+            posicion = "0";
+        }
+
+        friend class SopaLetras;
+
+        inline int devolverFila() const {
+            return fila;
+        }
+
+        inline int devolverColumna() const {
+            return columna;
+        }
+
+        inline string devolverPosicion() const {
+            return posicion;
+        }
+
+        inline string devolverPalabra() const {
+            return palabra;
+        }
+
+        friend istream& operator >> (istream &is, Palabra &palabra);
+};
+
+
+class SopaLetras {
+    private:
+        char **sopa;
+        int nFilas;
+        int nColumnas;
+    
+    public:
+        SopaLetras() {
+            this->nColumnas = 0;
+            this->nFilas = 0;
+            this->sopa = 0;
+        }
+
+        ~SopaLetras() {
+            for (int f = 0; f < this->nFilas; f++) {
+                delete [] *(this->sopa + f);
+            }
+            delete [] this->sopa;
+        }
+
+        void inicializarSopa() {
+            this->sopa = 0;
+            this->nColumnas = 0;
+            this->nFilas = 0;
+
+            cout << "\nIntroduzca la sopa de letras(un 0 para terminar):\n";
+            string fila;
+            getline(cin, fila);
+            this->nColumnas = fila.length();       //Igualamos el número de columnas a la longitud de la fila
+            while (fila != "0") {       //Cuando leamos un 0, paramos de introducir
+                char **aux = this->sopa;
+                this->sopa = new char* [this->nFilas + 1];
+
+                for (int f = 0; f <= this->nFilas; f++) {
+                    *(this->sopa + f) = new char [nColumnas];
                 }
-                if (coincide) {
-                    buscando = false;
-                    fila = i + 1;
-                    columna = j + 1;
+
+                for (int f = 0; f < this->nFilas; f++) {
+                    for (int c = 0; c < this->nColumnas; c++) {
+                        *(*(this->sopa + f) + c) = *(*(aux + f ) + c);
+                    }
                 }
+                
+                for (int f = 0; f < this->nFilas; f++) delete [] *(aux + f);       //Borramos puntero auxiliar
+                delete [] aux;
+                
+                for (int c = 0; c < this->nColumnas; c++) *(*(this->sopa + this->nFilas) + c) = fila[c];     //Introducimos la siguiente fila
+
+                this->nFilas++;    //Aumentamos el número de filas
+
+                getline(cin, fila);     //Leemos la siguiente fila
+
             }
         }
-    }
-    return !buscando;
-}
 
-bool comprobarVertical(char sopa [100] [100], string palabra, int &fila, int &columna) {
-    bool buscando = true, coincide = true;
-    for (int i = 0; i < fila - palabra.length() && buscando; i++) {                              //Comprobación vertical
-        for (int j = 0; j < columna && buscando; j++) {       //Solo buscamos hasta cierta fila, pues a partir de ahí la palabra no cabría en la sopa
-            coincide = true;
-            if (palabra[0] == sopa[i][j]) {
-                for (int k = 0; k < palabra.length() && coincide; k++) {
-                    if (palabra[k] != sopa[i+k][j]) coincide = false;
-                }
-                if (coincide){
-                    buscando = false;
-                    fila = i + 1;
-                    columna = j + 1;
-                }
-            }
-        }
-    }
-    return !buscando;
-}
+        friend ostream& operator << (ostream &o, const SopaLetras &sopa);
 
-bool comprobarDiagonal(char sopa [100] [100], string palabra, int &fila, int &columna) {
-    bool buscando = true, coincide = true;
-    for (int i = 0; i < fila - palabra.length() && buscando; i++) {                              //Comprobación diagonal
-        for (int j = 0; j < columna - palabra.length() && buscando; j++) {       //Solo buscamos hasta cierta columna y fila, pues a partir de ahí la palabra no cabría en la sopa
-            coincide = true;
-            if (palabra[0] == sopa[i][j]) {
-                for (int k = 0; k < palabra.length() && coincide; k++) {
-                    if (palabra[k] != sopa[i+k][j+k]) coincide = false;
-                }
-                if (coincide){
-                    buscando = false;
-                    fila = i + 1;
-                    columna = j + 1;
+        bool comprobarPalabra(Palabra &buscar) {
+            bool coincide, buscando = true;
+
+
+            for (int i = 0; i < nFilas - buscar.longitud && buscando; i++) {                              //Comprobación diagonal
+                for (int j = 0; j < nColumnas - buscar.longitud && buscando; j++) {       //Solo buscamos hasta cierta columna y fila, pues a partir de ahí la palabra no cabría en la sopa
+                    coincide = true;
+                    if (buscar.palabra[0] == *(*(this->sopa + i) + j)) {
+                        for (int k = 0; k < buscar.longitud && coincide; k++) {
+                            if (buscar.palabra[k] != *(*(this->sopa + i + k) + j + k)) coincide = false;
+                        }
+                        if (coincide){
+                            buscando = false;
+                            buscar.fila = i + 1;
+                            buscar.columna = j + 1;
+                            buscar.posicion = "diagonal";
+                        }
+                    }
                 }
             }
+
+            for (int i = 0; i < nFilas && buscando; i++) {                              //Comprobación horizontal
+                for (int j = 0; j < nColumnas - buscar.longitud && buscando; j++) {       //Solo buscamos hasta cierta columna, pues a partir de ahí la palabra no cabría en la *(*this->sopa + i) + j)
+                    coincide = true;
+                    if (buscar.palabra[0] == *(*(this->sopa + i) + j)) {
+                        for (int k = 0; k < buscar.longitud && coincide; k++) {
+                            if (buscar.palabra[k] != *(*(this->sopa + i) + j + k)) coincide = false;
+                        }
+                        if (coincide){
+                            buscando = false;
+                            buscar.fila = i + 1;
+                            buscar.columna = j + 1;
+                            buscar.posicion = "horizontal";
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < nFilas - buscar.longitud && buscando; i++) {                              //Comprobación vertical
+                for (int j = 0; j < nColumnas && buscando; j++) {       //Solo buscamos hasta cierta fila, pues a partir de ahí la palabra no cabría en la *(*this->sopa + i) + j)
+                    coincide = true;
+                    if (buscar.palabra[0] == *(*(this->sopa + i) + j)) {
+                        for (int k = 0; k < buscar.longitud && coincide; k++) {
+                            if (buscar.palabra[k] != *(*(this->sopa + i + k) + j)) coincide = false;
+                        }
+                        if (coincide){
+                            buscando = false;
+                            buscar.fila = i + 1;
+                            buscar.columna = j + 1;
+                            buscar.posicion = "vertical";
+                        }
+                    }
+                }
+            }
+
+            return !buscando;
+        }
+
+};
+
+
+
+istream& operator >> (istream &is, Palabra &palabra) {
+    cout << "\nIntroduzca la palabra:\n";
+    is >> palabra.palabra;
+    palabra.longitud = palabra.palabra.length();
+    for (int i = 0; i < palabra.longitud; i++) if (palabra.palabra[i]> 'Z') palabra.palabra[i] -= 32;
+    palabra.fila = 0;
+    palabra.columna = 0;
+    palabra.posicion = "0";
+    is.ignore();
+    return is;
+
+}
+
+ostream& operator << (ostream &o, const SopaLetras &sopa) {
+    for (int f = 0; f < sopa.nFilas; f++) {
+        o << endl;
+        for (int c = 0; c < sopa.nColumnas; c++) {
+            o << *(*(sopa.sopa + f) + c) << " ";
         }
     }
-    return !buscando;
+    o << endl;
+    return o;
 }
 
-
-void mostrar(char matriz[100][100], int filas, int columnas) {
-    cout << "\nLa sopa de letras es:\n";        //Decimos la sopa de letras completa
-    for (int i = 0; i < filas; i++) {
-        for (int j = 0; j < columnas; j++) cout << matriz[i][j] << " ";
-        cout << endl;
-    }
-}
-
-//---------------------------------------------------------------Comienzo del main------------------------------------------------------------------------
 
 int main() {
-    char sopaLetras[100][100];
-    bool continuar, coincide;
-    string palabra, posicion, opcion, filas;
-    int fila = 0, columna;
-    cout << "\nIntroduzca la sopa de letras: ";
-    getline(cin, filas);
-    while (filas != "0") {
-        columna = filas.length();
-        for (int i = 0; i < columna; i++) sopaLetras[fila] [i] = filas [i];
-        fila++;
-        getline(cin,filas);
-    }
-    int guardarF = fila, guardarC = columna;
-    mostrar(sopaLetras, guardarF, guardarC);
+    bool continuar = true;
+    string opcion;
+    SopaLetras sopa;
+    sopa.inicializarSopa();
+
+    cout << sopa;
+
+
+
 
     do {
-        coincide = false;
-        fila = guardarF;
-        columna = guardarC;
-        cout << "\nIntroduzca la palabra a buscar: ";
-        getline(cin, palabra);
-        
-        for (int i = 0; i < palabra.length(); i++) if (palabra[i]> 'Z') palabra[i] -= 32;       //Si tenemos alguna minúscula en la palabra, la pasamos a mayúscula
-
-        if (comprobarVertical(sopaLetras, palabra, fila, columna)) coincide = true;
-
-        if (!coincide) if (comprobarHorizontal(sopaLetras, palabra, fila, columna)) coincide = true;
-
-        if (!coincide) if (comprobarDiagonal(sopaLetras, palabra, fila, columna)) coincide = true;
+        Palabra Palabra;
+        cin >> Palabra;
 
 
-        if (coincide) {        //Si salimos de algún bucle for antes de recorrerlo entero, significa que encontramos la palabra
-            cout << "\nLa palabra " << palabra <<  " ha sido encontrada.\nSe ubica en la fila " << fila << " y en la columna " << columna << endl;
-        } else cout << "\nNo se encontró la palabra " << palabra << endl;
+        if (sopa.comprobarPalabra(Palabra)) {
+            cout << "\nLa palabra " << Palabra.devolverPalabra() <<  " ha sido encontrada.\nSe ubica en la fila " << Palabra.devolverFila() << " y en la columna " << Palabra.devolverColumna();
+            cout << " en posición " << Palabra.devolverPosicion();
+        } else cout << "\nNo se encontró la palabra " << Palabra.devolverPalabra();
 
-        cout << "\nDesea introducir una nueva palabra? (si/no) ";       //Preguntamos si quiere introducir una palabra nueva para buscar
+        cout << "\nDesea introducir una nueva palabra? (si/no) :\n";       //Preguntamos si quiere introducir una palabra nueva para buscar
         getline(cin, opcion);
 
         continuar = (opcion == "no")?false:true;        //Si escribe "no", salimos, si no seguimos buscando
 
     } while (continuar);
+
     cout << "\nFinalizando...\n\n";
 }
