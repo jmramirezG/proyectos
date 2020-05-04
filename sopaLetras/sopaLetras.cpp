@@ -141,7 +141,7 @@ class SopaLetras {
                 }
             }
 
-            //-------------------------------------------------------Comprobación horizontal-------------------------------------------------
+            //-------------------------------------------------------Comprobación horizontal hacia la dcha-------------------------------------------------
             for (int i = 0; i < nFilas && buscando; i++) {
                 for (int j = 0; j < nColumnas - buscar.longitud + 1 && buscando; j++) { //Solo buscamos hasta cierta columna, pues a partir de ahí la palabra no cabría en la *(*this->sopa + i) + j)
                     coincide = true;
@@ -156,13 +156,34 @@ class SopaLetras {
                             buscando = false;
                             buscar.fila = i + 1;
                             buscar.columna = j + 1;
-                            buscar.posicion = "horizontal";
+                            buscar.posicion = "horizontal hacia la derecha";
                         }
                     }
                 }
             }
 
-            //-------------------------------------------------------Comprobación vertical-------------------------------------------------
+            //-------------------------------------------------------Comprobación horizontal hacia la izq-------------------------------------------------
+            for (int i = 0; i < nFilas && buscando; i++) {
+                for (int j = buscar.longitud - 1; j < nColumnas && buscando; j++) { //Solo buscamos hasta cierta columna, pues a partir de ahí la palabra no cabría en la *(*this->sopa + i) + j)
+                    coincide = true;
+
+                    if (buscar.palabra[0] == *(*(this->sopa + i) + j)) {
+
+                        for (int k = 0; k < buscar.longitud && coincide; k++) {
+                            if (buscar.palabra[k] != *(*(this->sopa + i) + j - k)) coincide = false;
+                        }
+
+                        if (coincide){
+                            buscando = false;
+                            buscar.fila = i + 1;
+                            buscar.columna = j + 1;
+                            buscar.posicion = "horizontal hacia la izquierda";
+                        }
+                    }
+                }
+            }
+
+            //-------------------------------------------------------Comprobación vertical hacia abajo-------------------------------------------------
             for (int i = 0; i < nFilas - buscar.longitud + 1 && buscando; i++) {
                 for (int j = 0; j < nColumnas && buscando; j++) {       //Solo buscamos hasta cierta fila, pues a partir de ahí la palabra no cabría en la *(*this->sopa + i) + j)
                     coincide = true;
@@ -177,7 +198,28 @@ class SopaLetras {
                             buscando = false;
                             buscar.fila = i + 1;
                             buscar.columna = j + 1;
-                            buscar.posicion = "vertical";
+                            buscar.posicion = "vertical hacia abajo";
+                        }
+                    }
+                }
+            }
+
+            //-------------------------------------------------------Comprobación vertical hacia arriba-------------------------------------------------
+            for (int i = buscar.longitud - 1; i < nFilas && buscando; i++) {
+                for (int j = 0; j < nColumnas && buscando; j++) {       //Solo buscamos hasta cierta fila, pues a partir de ahí la palabra no cabría en la *(*this->sopa + i) + j)
+                    coincide = true;
+
+                    if (buscar.palabra[0] == *(*(this->sopa + i) + j)) {
+
+                        for (int k = 0; k < buscar.longitud && coincide; k++) {
+                            if (buscar.palabra[k] != *(*(this->sopa + i - k) + j)) coincide = false;
+                        }
+
+                        if (coincide){
+                            buscando = false;
+                            buscar.fila = i + 1;
+                            buscar.columna = j + 1;
+                            buscar.posicion = "vertical hacia arriba";
                         }
                     }
                 }
