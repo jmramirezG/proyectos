@@ -238,7 +238,7 @@ istream& operator >> (istream &is, Palabra &palabra) {      //Operador >> par la
 
     palabra.longitud = palabra.palabra.length();
 
-    for (int i = 0; i < palabra.longitud; i++) if (palabra.palabra[i]> 'Z') palabra.palabra[i] -= 32;   //Pasamos a mayúscula
+    for (int i = 0; i < palabra.longitud; i++) palabra.palabra[i] = toupper(palabra.palabra[i]);   //Pasamos a mayúscula
 
     palabra.fila = 0;       //Inicializamos el resto de variables como 0
     palabra.columna = 0;
@@ -264,14 +264,10 @@ ostream& operator << (ostream &o, const SopaLetras &sopa) {     //Operador << pa
 //-------------------------------------------------------------------------------INICIO DEL MAIN----------------------------------------------------------------
 
 int main() {
-    bool continuar;
-    string opcion;
-
     SopaLetras sopa;
     sopa.inicializarSopa();
 
     cout << sopa;
-
     do {
         Palabra Palabra;
         cin >> Palabra;
@@ -282,12 +278,10 @@ int main() {
             cout << " en posición " << Palabra.devolverPosicion();
         } else cout << "\nNo se encontró la palabra " << Palabra.devolverPalabra();
 
-        cout << "\nDesea introducir una nueva palabra? (si/no) :\n";       //Preguntamos si quiere introducir una palabra nueva para buscar
-        getline(cin, opcion);
+        cout << "\n\n\nIntroducir nueva palabra?\nIntro para continuar, crtl+D para finalizar\n\n";       //Preguntamos si quiere introducir una palabra nueva para buscar
+        cin.get();
 
-        continuar = (opcion == "no")?false:true;
-
-    } while (continuar);
+    } while (!cin.eof());
 
     cout << "\nFinalizando...\n\n";
 }
