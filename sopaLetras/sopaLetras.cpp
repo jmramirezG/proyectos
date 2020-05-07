@@ -25,7 +25,7 @@ class Palabra {
 
         Palabra(string entrada) {       //Creamos el objeto a partir de una palabra de entrada
             this->longitud = entrada.length();
-            for (int i = 0; i < entrada.length(); i++) if (entrada[i]> 'Z') entrada[i] -= 32;
+            for (int i = 0; i < entrada.length(); i++) entrada[i] = toupper(entrada[i]);
             this->palabra = entrada;
             fila = 0;
             columna = 0;
@@ -88,8 +88,8 @@ class SopaLetras {
             getline(cin, fila);
             this->nColumnas = fila.length();       //Igualamos el número de columnas a la longitud de la fila
             while (fila != "0") {       //Cuando leamos un 0, paramos de introducir
-                for (int i = 0; i < fila.length(); i++) if (fila[i]> 'Z') fila[i] -= 32;    //Convertimos las letras en mayúsculas
-
+                for (int i = 0; i < fila.length(); i++) fila[i] = toupper(fila[i]);    //Convertimos las letras en mayúsculas
+                
                 char **aux = this->sopa;        //Creamos un auxiliar
                 this->sopa = new char* [this->nFilas + 1];  //Añadimos una nueva fila
 
