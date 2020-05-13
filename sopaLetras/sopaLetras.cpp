@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -82,12 +83,13 @@ class SopaLetras {
             this->sopa = 0;
             this->nColumnas = 0;
             this->nFilas = 0;
+            ifstream letrassopa;
+            letrassopa.open("sopa de letras");
 
-            cout << "\nIntroduzca la sopa de letras(un 0 para terminar):\n";
             string fila;
-            getline(cin, fila);
-            this->nColumnas = fila.length();       //Igualamos el número de columnas a la longitud de la fila
-            while (fila != "0") {       //Cuando leamos un 0, paramos de introducir
+
+            while (getline(letrassopa, fila)) {
+                this->nColumnas = fila.length();       //Igualamos el número de columnas a la longitud de la fila
                 for (int i = 0; i < fila.length(); i++) fila[i] = toupper(fila[i]);    //Convertimos las letras en mayúsculas
                 
                 char **aux = this->sopa;        //Creamos un auxiliar
@@ -110,12 +112,12 @@ class SopaLetras {
 
                 this->nFilas++;    //Aumentamos el número de filas
 
-                getline(cin, fila);     //Leemos la siguiente fila
 
             }
+            letrassopa.close();
         }
 
-        friend ostream& operator << (ostream &o, const SopaLetras &sopa);       //Sobrecarga del operador << para mostrar la sopa de letras
+        friend std::ostream& operator << (ostream &o, const SopaLetras &sopa);       //Sobrecarga del operador << para mostrar la sopa de letras
 
         bool comprobarPalabra(Palabra &buscar) {            //Método para comprobar si una palabra x se encuentra en la sopa de letras
             bool coincide, buscando = true;
@@ -279,7 +281,6 @@ int main() {
         } else cout << "\nNo se encontró la palabra " << Palabra.devolverPalabra();
 
         cout << "\n\n\nIntroducir nueva palabra?\nIntro para continuar, crtl+D para finalizar\n\n";       //Preguntamos si quiere introducir una palabra nueva para buscar
-        cin.get();
 
     } while (!cin.eof());
 
