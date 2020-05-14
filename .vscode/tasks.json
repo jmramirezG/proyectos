@@ -18,6 +18,43 @@
                 "kind": "build",
                 "isDefault": true
             }
+            
+        },
+
+        {
+            "type": "shell",
+            "label": "Python build active file",
+            "command": "python",
+            "args": [
+                "-m",
+                "py_compile",
+                "${file}"
+            ],
+            "options": {
+                "cwd": "/usr/bin"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+
+        {
+            "type": "shell",
+            "label": "Python run active file",
+            "command": "python",
+            "args": [
+                "${file}"
+            ],
+            "options": {
+                "cwd": "/usr/bin"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ],
     "version": "2.0.0"

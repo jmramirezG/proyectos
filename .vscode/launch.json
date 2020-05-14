@@ -24,6 +24,18 @@
             ],
             "preLaunchTask": "g++ build active file",
             "miDebuggerPath": "/usr/bin/gdb"
+        },
+    
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasename}",
+            "args": [
+                "runserver",
+                "--noreload"
+            ],
+            "django": true
         }
     ]
 }
