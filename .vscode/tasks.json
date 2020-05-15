@@ -24,7 +24,7 @@
         {
             "type": "shell",
             "label": "Python build active file",
-            "command": "python",
+            "command": "python3",
             "args": [
                 "-m",
                 "py_compile",
@@ -43,7 +43,7 @@
         {
             "type": "shell",
             "label": "Python run active file",
-            "command": "python",
+            "command": "python3",
             "args": [
                 "${file}"
             ],
