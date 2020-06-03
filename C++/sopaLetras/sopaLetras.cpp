@@ -83,8 +83,8 @@ class SopaLetras {
             this->sopa = 0;
             this->nColumnas = 0;
             this->nFilas = 0;
-            ifstream letrassopa;
-            letrassopa.open("sopa de letras");
+            ifstream letrassopa;                        //Permitimos la lectura desde archivos para facilitar la introducción de la sopa de letras
+            letrassopa.open("sopa_de_letras");          //Abrimos el archivo sopa_de_letras
 
             string fila;
 
@@ -114,7 +114,7 @@ class SopaLetras {
 
 
             }
-            letrassopa.close();
+            letrassopa.close();         //Cerramos el archivo
         }
 
         friend std::ostream& operator << (ostream &o, const SopaLetras &sopa);       //Sobrecarga del operador << para mostrar la sopa de letras
@@ -232,10 +232,12 @@ class SopaLetras {
 
 };
 
+
+
 //------------------------------------------------------------------------SOBRECARGA DE OPERADORES--------------------------------------------------------
 
 istream& operator >> (istream &is, Palabra &palabra) {      //Operador >> par la clase Palabra
-    cout << "\nIntroduzca la palabra:\n";
+    cout << "\n\n\ncrtl+D para finalizar en cualquier momento.\nIntroduzca la palabra:\n";
     is >> palabra.palabra;  //Leemos la palabra a buscar
 
     palabra.longitud = palabra.palabra.length();
@@ -251,6 +253,8 @@ istream& operator >> (istream &is, Palabra &palabra) {      //Operador >> par la
     return is;  //Devolvemos el istream
 }
 
+
+
 ostream& operator << (ostream &o, const SopaLetras &sopa) {     //Operador << para la Sopa de Letras
     for (int f = 0; f < sopa.nFilas; f++) {     //Recorremos cada fila
         o << endl;
@@ -262,6 +266,8 @@ ostream& operator << (ostream &o, const SopaLetras &sopa) {     //Operador << pa
 
     return o;
 }
+
+
 
 //-------------------------------------------------------------------------------INICIO DEL MAIN----------------------------------------------------------------
 
@@ -279,8 +285,6 @@ int main() {
             cout << "\nLa palabra " << Palabra.devolverPalabra() <<  " ha sido encontrada.\nSe ubica en la fila " << Palabra.devolverFila() << " y en la columna " << Palabra.devolverColumna();
             cout << " en posición " << Palabra.devolverPosicion();
         } else cout << "\nNo se encontró la palabra " << Palabra.devolverPalabra();
-
-        cout << "\n\n\nIntroducir nueva palabra?\nIntro para continuar, crtl+D para finalizar\n\n";       //Preguntamos si quiere introducir una palabra nueva para buscar
 
     } while (!cin.eof());
 
