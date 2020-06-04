@@ -14,18 +14,14 @@ void mostrar(int matriz[tam][tam]) {
     }
 }
 
-int mayor(int array[], int pos = 0) {
-    static int devuelto = 0;
-    if (pos == 0) {
-        devuelto = 0;
-    }
+int mayor(int array[], int pos = 0, int devuelto = 0) {
     if (array[pos] > devuelto) {
         devuelto = array[pos];
     }
     if (pos == tam-1) {
         return devuelto;
     } else {
-        return mayor(array, pos+1);
+        return mayor(array, pos+1, devuelto);
     }
 }
 
