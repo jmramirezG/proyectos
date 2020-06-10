@@ -101,5 +101,5 @@ int main() {
         }
     }
 
-    cout << palabra << "\n\n¡¡Enhorabuena!! Ha conseguido averiguar la palabra\n\n";
+    cout << endl << endl << palabra << "\n¡¡Enhorabuena!! Ha conseguido averiguar la palabra\n\n";
 }
