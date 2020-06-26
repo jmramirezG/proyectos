@@ -136,7 +136,7 @@ int main() {
     cin >> opcion;
     cin.ignore(1000, '\n');
     delete palabra;             //Borramos la palabra
-    if (opcion == 'y') goto inicio;
+    if (opcion == 'y' || opcion == 'Y') goto inicio;
 
     cout << "\n\nFinalizando...\n";
 }
