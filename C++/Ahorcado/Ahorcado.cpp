@@ -138,5 +138,5 @@ int main() {
     delete palabra;             //Borramos la palabra
     if (opcion == 'y' || opcion == 'Y') goto inicio;
 
-    cout << "\n\nFinalizando...\n";
+    cout << "\n\nFinalizando...\n\n";
 }
