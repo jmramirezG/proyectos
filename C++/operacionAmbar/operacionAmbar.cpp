@@ -8,8 +8,8 @@ const string archivo = "/mnt/c3096fe8-ceba-4048-b201-af08720979e4/Beneficios/Ope
 class Beneficios {
     private:
         double beneficios;
-        const double razonPrepo = 0.33333333333333333333334;
-        const double razonMarco = 0.66666666666666666666667;
+        const double razonPrepo = 1.0/3.0;
+        const double razonMarco = 2.0/3.0;
 
     public:
 
@@ -25,7 +25,7 @@ class Beneficios {
 
         friend ostream & operator<<(ostream &o, const Beneficios & beneficios);
 
-        void guardarBeneficios(const string nombreArchivo);
+        void guardarBeneficios();
 
 };
 
@@ -35,36 +35,44 @@ Beneficios::Beneficios() {
     txt.open(archivo);
     txt >> beneficios;
     txt.close();
-    cout << endl;
-    system("rm -v /mnt/c3096fe8-ceba-4048-b201-af08720979e4/Beneficios/OperacionAmbar");
 }
 
 void Beneficios::menu() {
     bool fin = false;
     while (!fin) {
+
         cout << "\nElija la opción que prefiera:\n1.\tAñadir un beneficio.\n2.\tEnunciar dineros.\t\n3.\tSalir.\n";
         int opcion;
         cin >> opcion;
-        if (opcion == 3) {
-            cin.ignore(100000, '\n');
-            guardarBeneficios(archivo);
-            fin = true;
-        } else if (opcion == 1) {
-            double cant;
-            cin.ignore(100000, '\n');
-            cout << "\nIntroduzca la cantidad a añadir: ";
-            cin >> cant;
-            addBeneficio(cant);
-        
-        } else if (opcion == 2) {
-            cout << "Llevamos obtenidos un total de " << beneficios << ".\nDe los cuales " << partePrepo();
-            cout << " pertenecen a Prepo y " << parteMarco() << " pertenecen a Marco Aurelio.\n\n";
+
+        switch (opcion) {
+            case 1:
+                double cant;
+                cin.ignore(100000, '\n');
+                cout << "\nIntroduzca la cantidad a añadir: ";
+                cin >> cant;
+                addBeneficio(cant);
+                guardarBeneficios();
+                break;
+
+            case 2:
+                cout << "\n\nLlevamos obtenidos un total de " << beneficios << ".\n" << partePrepo();
+                cout << " pertenecen a Prepo y " << parteMarco() << " pertenecen a Marco Aurelio.\n\n";
+                break;
+
+            case 3:
+                cin.ignore(100000, '\n');
+                guardarBeneficios();
+                fin = true;
+                break;
+
+            default:
+                cin.ignore(100000, '\n');
+                cout << "\nOpción incorrecta, introduzca de nuevo\n";
+                opcion = 0;
+                break;
         }
-        else {
-            cin.ignore(100000, '\n');
-            cout << "\nOpción incorrecta, introduzca de nuevo\n";
-            opcion = 0;
-        }
+
         if (!fin)
             cin.ignore(100000, '\n');
     }
@@ -88,10 +96,11 @@ ostream & operator<<(ostream & o, const Beneficios & beneficios) {
     return o;
 }
 
-void Beneficios::guardarBeneficios(const string nombreArchivo) {
+void Beneficios::guardarBeneficios() {
     ofstream txt;
+    system("rm /mnt/c3096fe8-ceba-4048-b201-af08720979e4/Beneficios/OperacionAmbar");
     system("touch /mnt/c3096fe8-ceba-4048-b201-af08720979e4/Beneficios/OperacionAmbar");
-    txt.open(nombreArchivo);
+    txt.open(archivo);
     txt << beneficios;
     txt.close();
 }
