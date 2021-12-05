@@ -30,8 +30,7 @@ for line in file:
 sol = [(1000*[0]) for x in range(1000)]
 
 for lista in validas:
-    P1 = lista[0]
-    P2 = lista[1]
+    P1, P2 = lista
 
     #print(P1)
     #print(P2)
